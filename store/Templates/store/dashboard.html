@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Include Chart.js -->
+    <!-- Include FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript">
+        var user = '{{request.user}}'
+
+		function getToken(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getToken('csrftoken')
+
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-family: 'Copperplate Gothic Light', sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h1 span {
+            color: purple;
+            transition: color 0.3s ease-in-out;
+        }
+
+        header {
+            background-color: rgba(153,75,192,0.61);
+            color: black;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 48%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: ghostwhite;
+            font-family: "Calibri Light";
+        }
+
+        .widgets {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .widget {
+            width: 230px; /* Adjust the width to 25% */
+            height: 100px; /* Adjust the height to 150 pixels */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 20px;
+            text-align: center;
+            margin: 10px; /* Add margin to create space around the widgets */
+            color: rgba(153,75,192,0.61);
+            border: 2px solid rgba(153,75,192,0.61);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 50px;
+            left: 100px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transform: translateY(-50%);
+            padding: 10px;
+            background-color: #9900cc;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+         .back-btn {
+            position: absolute;
+            top: 50px;
+            left: 20px; /* Adjust the left position as needed */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transform: translateY(-50%);
+            padding: 10px;
+            background-color: #9900cc;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-btn i {
+            font-size: 24px; /* Adjust the font size as needed */
+            margin-right: 10px; /* Add margin between icon and text */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><span>Em</span>por<span>ium</span></h1>
+        <a href="/"  class="back-btn"><i class="fas fa-arrow-left"></i></a>
+
+    </header>
+
+    <div class="content">
+        <div class="widgets">
+            <div class="widget">
+                <i class="fas fa-boxes fa-2x"></i>
+                <h2>Stock</h2>
+                <p>{{products.total_inventory}}</p>
+            </div>
+
+            <div class="widget">
+                <i class="fas fa-chart-line fa-2x"></i>
+                <h2>Total Users</h2>
+                <p>{{customers.total_users}}</p>
+            </div>
+
+            <div class="widget">
+                <i class="fas fa-dollar-sign fa-2x"></i>
+                <h2>Revenue</h2>
+                <p>${{total_revenue.total_price}}</p>
+            </div>
+
+            <div class="widget">
+                <i class="fas fa-users fa-2x"></i>
+                <h2>Employees</h2>
+                <p>{{salespersons.name}}</p>
+            </div>
+        </div>
+
+
+        <div class="card">
+            <h5>&nbsp;&nbsp;Below graph shows the average ratings of our top products and its contribution to customer satisfaction and &nbsp;&nbsp;influence on purchase decisions</h5>
+            <canvas id="topProductsChart" width="400" height="200"></canvas>
+        </div>
+         <div class="card">
+            <h5>&nbsp;&nbsp;Total Sales Volume by Region</h5>
+            <canvas id="lineChart" width="400" height="200"></canvas>
+        </div>
+
+
+    </div>
+
+    <!-- Other product details... -->
+    <script>
+    // Area Graph with Two Fields
+    var topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+    var topProductsChart = new Chart(topProductsCtx, {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for product in top_products %}
+                    '{{ product.BagType }}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Average Rating',
+                data: [
+                    {% for product in top_products %}
+                        {{ product.AverageRating }},
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(153,75,192,0.61)',
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'category',
+                    labels: [
+                        {% for product in top_products %}
+                            '{{ product.BagType }}',
+                        {% endfor %}
+                    ]
+                },
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+
+</script>
+    <script>
+    // Line Chart for Total Sales
+    var salesChartCtx = document.getElementById('lineChart').getContext('2d');
+    var salesChart = new Chart(salesChartCtx, {
+        type: 'line',
+        data: {
+            labels: [
+                {% for entry in totalSales %}
+                    '{{ entry.Region_name }}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Total Sales',
+                data: [
+                    {% for entry in totalSales %}
+                        {{ entry.TotalSales }},
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(153,75,192,0.61)',
+                borderColor: 'rgba(153,75,192,0.2)',
+                borderWidth: 1,
+                fill: true,
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="script.js"></script>
+    <section id="header">
+        <div class="brand">
+        <a href="#">
+            <h1>In<span>stant</span></h1>
+        </a>
+        </div>
+        <div id="wrapper">
+            <ul id="navbar">
+                <li><a href="/">Home</a></li>
+                <li><a class="active" href="/product">Shop</a></li>
+                <li><a href="#">Categories</a>
+                    <div class="mega-box">
+                        <div class="content">
+                          <div class="row">
+                            <header>Material</header>
+                            <ul class="mega-links">
+                                <li><a href="/sp" data-after="p1">Bricks</a></li>
+                                <li><a href="/sp1">Cement</a></li>
+                                <li><a href="/sp2">Concrete</a></li>
+                                <li><a href="/sp3">Steel</a></li>
+                                <li><a href="/sp4">Sand</a></li>
+                           </ul>
+                      </div>
+                      <div class="row">
+                        <header>Indoor Essentials</header>
+                           <ul class="mega-links">
+                                <li><a href="/sp5">Wires</a></li>
+                                <li><a href="/sp6">Ceramics</a></li>
+                                <li><a href="/sp7">Wood</a></li>
+                                <li><a href="/sp8">Paints</a></li>
+                                <li><a href="/sp9">Glass</a></li>
+                          </ul>
+                      </div>
+                       <div class="row">
+                           <header>Machinery</header>
+                            <ul class="mega-links">
+                                <li><a href="/sp10">Transit mixer</a></li>
+                                <li><a href="/sp11">Drum Mixer</a></li>
+                                <li><a href="/sp12">Mini crane</a></li>
+                                <li><a href="/sp13">Tower Hoist</a></li>
+                                <li><a href="/sp14">Wheel Barrow</a></li>
+                           </ul>
+                          </div>
+                        </div>
+                    </div>
+                   
+                </li>
+                <li><a href="/cart"><img src="https://img.icons8.com/ios-glyphs/90/000000/shopping-cart--v1.png" width="30" height="30"/></a></li>
+            </ul>
+        </div>
+    </section>
+    <section id="prodetails" class="section-p1">
+        <div class="single-pro-image">
+            <img src="{% static './Images/concrete-stone-aggregate-500x500.jpeg'%} " width="100%" id="MainImg" alt="">
+            <div class="small-img-group">
+                <div class="small-img-col">
+                    <img src="{% static './Images/concrete-stone-aggregate-500x500.jpeg'%}" width="100%" class="small-img" alt="">
+                </div>
+                <div class="small-img-col">
+                    <img src="{% static './Images/GettyImages-941748918-5c7f3654c9e77c00012f82f6.jpeg'%}" width="100%" class="small-img" alt="">
+                </div>
+                <div class="small-img-col">
+                    <img src="{% static './Images/1513692343_vLnn1_STONECategoryTest.jpeg'%}" width="100%" class="small-img" alt="">
+                </div>
+                <div class="small-img-col">
+                    <img src="{% static './Images/self-compacting-concrete.webp'%}" width="100%" class="small-img" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="single-pro-details">
+            <h6>Concrete</h6>
+            <h4>Best Quality</h4>
+            <h2>Rs.2000 per/ton</h2>
+            <input type="number" value="1">
+            <button class="normal" style="vertical-align:middle"><span>Add To Cart</span></button>
+            <h4>Product Details</h4>
+            <span><h2>We produce the best quality products direct from the factory to your home.
+                Concrete is expected to be a key material for structures resilient to climate disasters,[7] as well as a solution to mitigate the pollution of other industries, capturing wastes such as coal fly ash or bauxite tailings and residue.
+            </h2></span>
+        </div>
+    </section>
+    <script>
+        var MainImg=document.getElementById("MainImg");
+        var smallimg=document.getElementsByClassName("small-img");
+
+        smallimg[0].onclick=function(){
+            MainImg.src=smallimg[0].src;
+        }
+        smallimg[1].onclick=function(){
+            MainImg.src=smallimg[1].src;
+        }
+        smallimg[2].onclick=function(){
+            MainImg.src=smallimg[2].src;
+        }
+        smallimg[3].onclick=function(){
+            MainImg.src=smallimg[3].src;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="script.js"></script>
+    <section id="header">
+        <div class="brand">
+        <a href="#">
+            <h1>In<span>stant</span></h1>
+        </a>
+        </div>
+        <div id="wrapper">
+            <ul id="navbar">
+                <li><a href="/">Home</a></li>
+                <li><a class="active" href="/product">Shop</a></li>
+                <li><a href="#">Categories</a>
+                    <div class="mega-box">
+                        <div class="content">
+                          <div class="bar"></div>
+                          <div class="row">
+                               <header>Shop By Brands</header>
+                                <ul class="mega-links">
+                                    <li><a href="/sp11">ALDO</a></li>
+                                    <li><a href="/sp12">Calvin Klein</a></li>
+                                    <li><a href="/sp13">Michael Kors</a></li>
+                                    <li><a href="/sp14">Kate Spade</a></li>
+                               </ul>
+                          </div>
+                            <div class="row">
+                                <header>Shop By Types</header>
+                                <ul class="mega-links">
+                                    <li><a href="/sp7">HandBag</a></li>
+                                    <li><a href="/sp8">SlingBag</a></li>
+                                    <li><a href="/sp9">Wallet</a></li>
+                                    <li><a href="/sp10">Backpack</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="/cart"><img src="https://img.icons8.com/ios-glyphs/90/000000/shopping-cart--v1.png" width="30" height="30"/></a></li>
+            </ul>
+        </div>
+    </section>
+    <section id="product1" class="section-p1">
+        <div class="pro-container">
+            {% for product in products %}
+            <div class="pro">
+                <section id="p1">
+                <img src="{{product.imageURL}}" alt="">
+                <div class="des">
+                    <span></span>
+                    <h5>{{product.name}}</h5>
+                    <div class="star">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half"></i>
+                    </div>
+                    <h4>Rs.{{product.price|floatformat:2}} /Piece</h4>
+                    <h5>{{product.description}}</h5>
+                </div>
+                </section>
+                <a data-product={{product.id}} data-action="add" class="update-cart" href="#"><img src="https://img.icons8.com/material-rounded/96/000000/shopping-bag.png" width="30" height="40"/></a>
+
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    <script>
+        var MainImg=document.getElementById("MainImg");
+        var smallimg=document.getElementsByClassName("small-img");
+
+        smallimg[0].onclick=function(){
+            MainImg.src=smallimg[0].src;
+        }
+        smallimg[1].onclick=function(){
+            MainImg.src=smallimg[1].src;
+        }
+        smallimg[2].onclick=function(){
+            MainImg.src=smallimg[2].src;
+        }
+        smallimg[3].onclick=function(){
+            MainImg.src=smallimg[3].src;
+        }
+    </script>
+</body>
+</html>

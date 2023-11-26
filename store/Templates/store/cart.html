@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style.css">
+
+    <script type="text/javascript">
+        var user = '{{request.user}}'
+
+		function getToken(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getToken('csrftoken')
+    </script>
+</head>
+<body>
+    <section id="header">
+        <div class="brand">
+        <a href="#">
+            <h1>In<span>stant</span></h1>
+        </a>
+        </div>
+        <div id="wrapper">
+            <ul id="navbar">
+                <li><a href="/">Home</a></li>
+                <li><a  href="/product">Shop</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="#">Categories</a>
+                    <div class="mega-box">
+                        <div class="content">
+                          <div class="bar"></div>
+                          <div class="row">
+                               <header>Material</header>
+                                <ul class="mega-links">
+                                    <li><a href="/sp" data-after="p1">Bricks</a></li>
+                                    <li><a href="/sp1">Cement</a></li>
+                                    <li><a href="/sp2">Concrete</a></li>
+                                    <li><a href="/sp3">Steel</a></li>
+                                    <li><a href="/sp4">Sand</a></li>
+                               </ul>
+                          </div>
+                          <div class="row">
+                            <header>Indoor Essentials</header>
+                               <ul class="mega-links">
+                                    <li><a href="/sp5">Wires</a></li>
+                                    <li><a href="/sp6">Ceramics</a></li>
+                                    <li><a href="/sp7">Wood</a></li>
+                                    <li><a href="/sp8">Paints</a></li>
+                                    <li><a href="/sp9">Glass</a></li>
+                              </ul>
+                          </div>
+                          <div class="row">
+                               <header>Machinery</header>
+                                <ul class="mega-links">
+                                    <li><a href="/sp10">Transit mixer</a></li>
+                                    <li><a href="/sp11">Drum Mixer</a></li>
+                                    <li><a href="/sp12">Mini crane</a></li>
+                                    <li><a href="/sp13">Tower Hoist</a></li>
+                                    <li><a href="/sp14">Wheel Barrow</a></li>
+                               </ul>
+                          </div>
+                        </div>
+                    </div>
+                   
+                </li>
+                <li><a class="active" href="cart.html"><img src="https://img.icons8.com/ios-glyphs/90/000000/shopping-cart--v1.png" width="30" height="30"/></a></li>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><img src="https://img.icons8.com/ios-glyphs/90/000000/shopping-cart--v1.png" width="30" height="30"/></a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+    <section id="page-header">
+        <h2>Thank You!</h2>
+        <p>Please make payment</p>
+    </section>
+    <section id="cart" class="section-p1">
+        <table width="100%">
+            <thead>
+                <tr>
+                    <td>Remove</td>
+                    <td>Image</td>
+                    <td>Product</td>
+                    <td>Price</td>
+                    <td>Quantity</td>
+                    <td>Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                {%for item in items %}
+                <tr>
+                    <td><a data-product={{item.product.id}} data-action="remove" class="update-cart" href="#"><img src="https://img.icons8.com/ios-glyphs/90/000000/delete-forever.png" width="20" height="25"/> </a> </td>
+                    <td><img src="{{item.product.imageURL}}"></td>
+                    <td>{{item.product.name}}</td>
+                    <td>Rs.{{item.product.price|floatformat:2}}/piece</td>
+                    <td class="quantity">
+                        <p class="quantity">{{item.quantity}}</p>
+                        <div class="quantity">
+                            <img data-product={{item.product.id}} data-action="add" class="update-cart chg-quantity" src="{% static './images/3+arrow-up.png'%}">
+                            <img data-product={{item.product.id}} data-action="remove" class="update-cart chg-quantity" src="{% static './images/2+arrow-down.png'%}">
+                            
+                          <!--<td><input type="number" data-product={{item.product.id}} data-action="add" class="updat-cart" value="{{item.quantity}}"></td>-->
+                        </div>
+                    <td>Rs.{{item.get_total|floatformat:2}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section id="cart-add" class="section-p1">
+        <div id="coupon">
+            <h3> Apply coupon</h3>
+            <div>
+                <input type="text" placeholder="Enter Your coupon">
+                <button class="normal">Apply</button>
+            </div>
+        </div>
+        <div id="subtotal">
+            <h3>Cart Total</h3>
+            <table>
+                <tr>
+                   <td>Cart Subtotal</td>
+                   <td>Rs.{{order.get_cart_total|floatformat:2}}</td> 
+                </tr>
+                <tr>
+                    <td>Total Items</td>
+                    <td>{{order.get_cart_items}}
+                </tr>        
+                <tr>
+                    <td>Shipping</td>
+                    <td>Free</td>
+                </tr>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong>Rs.{{order.get_cart_total|floatformat:2}}</strong></td>
+                </tr>
+            </table>
+            <button id="rzp-button1" class="normal">Proceed to Payment</button>
+        </div>
+    </section>
+    <!--<script src="script.js"></script>-->
+    <script type="text/javascript" src="{%static 'js/Cart.js'%}"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "rzp_test_mYSgjPNDuT7kAg", // Enter the Key ID generated from the Dashboard
+            "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Instant",
+            "description": "Purchase Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        document.getElementById('rzp-button1').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+        </script>
+</body>
+</html>

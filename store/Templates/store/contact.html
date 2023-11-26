@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section id="header">
+        <div class="brand">
+        <a href="#">
+            <h1>Emp<span>orium</span></h1>
+        </a>
+        </div>
+        <div id="wrapper">
+            <ul id="navbar">
+                <li><a href="/">Home</a></li>
+                <li><a  href="/product">Shop</a></li>
+                <li><a class="active" href="#">Contact</a></li>
+                <li><a href="#">Categories</a>
+                    <div class="mega-box">
+                        <div class="content">
+                          <div class="bar"></div>
+                      <div class="row">
+                               <header>Shop By Brands</header>
+                                <ul class="mega-links">
+                                    <li><a href="/sp11">ALDO</a></li>
+                                    <li><a href="/sp12">Calvin Klein</a></li>
+                                    <li><a href="/sp13">Michael Kors</a></li>
+                                    <li><a href="/sp14">Kate Spade</a></li>
+                               </ul>
+                          </div>
+                            <div class="row">
+                                <header>Shop By Types</header>
+                                <ul class="mega-links">
+                                    <li><a href="/sp7">HandBag</a></li>
+                                    <li><a href="/sp8">SlingBag</a></li>
+                                    <li><a href="/sp9">Wallet</a></li>
+                                    <li><a href="/sp10">Backpack</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </li>
+                <li><a href="/cart"><img src="https://img.icons8.com/ios-glyphs/90/000000/shopping-cart--v1.png" width="30" height="30"/></a></li>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><img src="https://img.icons8.com/ios-glyphs/90/000000/shopping-cart--v1.png" width="30" height="30"/></a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+    <section id="page-header">
+        <h2>Our Location</h2>
+        <p>We will available offline here!</p>
+    </section>
+    <section id="contact-details" class="section-p1">
+        <div class="details">
+            <span>Get in touch!</span>
+            <h3>Head Office</h3>
+            <div>
+                <li>
+                    <img src="https://img.icons8.com/ios-glyphs/90/000000/map-marker.png" width="30" height="30" />
+                    <p>Squirrel Hill, Pittsburgh Pennslyvania</p>
+                </li>
+                <li>
+                    <img src="https://img.icons8.com/ios-glyphs/90/000000/phone--v1.png" width="30" height="30"/>
+                    <p>+91 123-123-1234</p>
+                </li>
+                <li>
+                    <img src="https://img.icons8.com/ios-glyphs/90/000000/new-post.png" width="30" height="30"/>
+                    <p>Instant@gmail.com</p>
+                </li>
+            </div>
+        </div>
+        <div class="map">
+            <iframe  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d418.361192094422!2d-122.08402853215642!3d37.42258037538275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808580bb97a07d47%3A0x883dd3d01f70de28!2sGoogleplex!5e0!3m2!1sen!2sus!4v1638037948737!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>
