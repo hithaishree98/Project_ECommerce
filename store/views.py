@@ -22,22 +22,23 @@ def product(request):
       products=Product.objects.all()
       context = {'products':products,'cartItems':cartItems}
       return render(request, 'store/Products.html', context)
- 
+
+
 def cart(request):
-      if request.user.is_authenticated:
-            customer=request.user.customer
-            order, created=Order.objects.get_or_create(customer=customer,complete=False)
-            items=order.orderitem_set.all()
-      else:
-            items=[]
-            order={'get_cart_total':0,'get_cart_items':0,'shipping':False}
-      client=razorpay.Client(auth=(settings.KEY, settings.SECRET))
-      payment=client.order.create({'amount':order.get_cart_total *100,'currency':'INR','payment_capture':1})
-      order.razor_pay_order_id=payment['id']
-      order.save()
-      
-      context = {'items':items, 'order':order,'payment':payment}
-      return render(request, 'store/cart.html', context)
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+    else:
+        items = []
+        order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
+    client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
+    payment = client.order.create({'amount': order.get_cart_total * 100, 'currency': 'USD', 'payment_capture': 1})
+    order.razor_pay_order_id = payment['id']
+    order.save()
+
+    context = {'items': items, 'order': order, 'payment': payment}
+    return render(request, 'store/cart.html', context)
 
 def checkout(request):
       if request.user.is_authenticated:
@@ -237,7 +238,7 @@ def dashboard(request):
         cartItems = order['get_cart_items']
     products = Product.objects.all().aggregate(total_inventory=Sum('InventoryQuantity'))
     customers = Customer.objects.all().aggregate(total_users=Count('name'))
-    total_revenue = Product.objects.all().aggregate(total_price=Sum('price'))
+    total_revenue = StoreTransaction.objects.all().aggregate(total_price=Sum('total_amount'))
     salespersons = StoreSalesperson.objects.all().aggregate(name=Count('salesperson_name'))
     totalSales = region.objects.values('Region_name', 'TotalSales').order_by('-TotalSales')
     top_products = Product.objects.values('BagType').annotate(AverageRating=Avg('AverageRating')).order_by('-AverageRating')[:4]

@@ -122,6 +122,13 @@ class StoreSalesperson(models.Model):
     class Meta:
         db_table = 'store_salesperson'
 
+class StoreTransaction(models.Model):
+    transaction_id =  models.CharField(max_length=200, null=True)
+    total_amount = models.DecimalField(max_digits=5, decimal_places=2)
+    # Add more fields as needed
+    class Meta:
+        db_table = 'store_transactions'
+
 class region(models.Model):
     Region_ID = models.AutoField(primary_key=True)
     Region_name = models.CharField(max_length=200, null=True)
@@ -130,3 +137,10 @@ class region(models.Model):
 
     def __str__(self):
         return self.Region_name
+
+
+class CartItem(models.Model):
+    cart_id = models.BigIntegerField(null=True)
+
+    class Meta:
+        db_table = 'store_cart'

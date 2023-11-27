@@ -135,10 +135,15 @@
                 </div>
                 </section>
                <!-- products.html -->
-<a data-product="{{ product.id }}" data-action="add" class="update-cart" href="#">
-    <img src="https://img.icons8.com/material-rounded/96/000000/shopping-bag.png" width="30" height="40"/>
-</a>
-
+                {% if product.InventoryQuantity|floatformat:2 == "0.00" %}
+                    <div class="carthere">
+                        <p style="color:red">PRODUCT OUT OF STOCK</p>
+                    </div>
+                {% else %}
+                    <a data-product="{{ product.id }}" data-action="add" class="update-cart" href="#">
+                        <img src="https://img.icons8.com/material-rounded/96/000000/shopping-bag.png" width="30" height="40"/>
+                    </a>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
