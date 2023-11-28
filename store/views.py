@@ -33,7 +33,7 @@ def cart(request):
         items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
     client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
-    payment = client.order.create({'amount': order.get_cart_total * 100, 'currency': 'USD', 'payment_capture': 1})
+    payment = client.order.create({'amount': order.get_cart_total * 100, 'currency': 'INR', 'payment_capture': 1})
     order.razor_pay_order_id = payment['id']
     order.save()
 
