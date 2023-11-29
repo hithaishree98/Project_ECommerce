@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: lavender; /* Set your background color */
+        }
+
+        .card {
+            width: 40%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff; /* Set your card background color */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+            overflow-y: auto; /* Add scrollbar when content overflows */
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #7e57c2; /* Set your heading color */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #7e57c2; /* Highlight label color */
+            font-weight: bold; /* Make label bold */
+        }
+
+        p {
+            display: block;
+            margin-bottom: 10px;
+            color: #333; /* Set text color */
+        }
+    </style>
+</head>
+<body>
+    <h1>Warehouse Detail</h1>
+<div class="card">
+        <h2>Warehouse Detail</h2>
+        <label>Address:</label>
+        <p>{{ warehouse.address }}</p>
+
+        <label>Store Manager:</label>
+        <p>{{ warehouse.store_manager}}</p>
+
+        <label>Salespersons:</label>
+        <p>{{ warehouse.salespersons }}</p>
+
+        <label>Region ID:</label>
+        <p>{{ warehouse.region_ID }}</p>
+
+        <a href="{% url 'warehouse_list' %}" style="color: mediumpurple;">Back to Warehouse List</a>
+    </div>
+</body>
+</html>

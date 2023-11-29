@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,6 +45,26 @@
             min-height: 100vh;
             flex-direction: column;
             /* Added to make sure the content flows correctly */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid lavender;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: lavender;
+        }
+
+        tbody tr:hover {
+            background-color: lavender;
         }
 
         h1 {
@@ -132,7 +151,7 @@
             text-align: center;
             margin: 10px;
             color: rgba(16, 44, 224, 0.61);
-            border: 2px solid rgba(97, 117, 253, 0.83);
+            border: 2px solid rgba(5, 11, 54, 0.61);
         }
 
         .back-btn {
@@ -152,146 +171,60 @@
             font-size: 24px;
             margin-right: 10px;
         }
+
     </style>
 </head>
 
 <body>
+<header>
+    <h1><span>Emporium Analytics</span></h1>
+    <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+    <a href="/admin" data-after="Admin" style="color:mediumpurple">Admin</a>
+</header>
 
-    <header>
-        <h1><span>Emporium Analytics</h1>
-        <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i></a>
-        <a href="/admin" data-after="Admin" style="color:mediumpurple">Admin</a>
-    </header>
-
-    <div class="sidebar">
-        <a href="/dashboard">
-            <i class="fas fa-tachometer-alt"></i> Dashboard
-        </a>
-        <a href="/order_items">
-            <i class="fas fa-file"></i> Orders
-        </a>
-        <a href="/products">
-            <i class="fas fa-shopping-cart"></i> Products
-        </a>
-        <a href="/customers">
-            <i class="fas fa-users"></i> Customers
-        </a>
-        <a href="/warehouses">
-            <i class="fa fa-truck"></i> Warehouse
-        </a>
-    </div>
-
-    <section id="#dashboard">
-        <div class="content">
-            <div class="widgets">
-                <div class="widget">
-                    <i class="fas fa-boxes fa-2x"></i>
-                    <h2>Stock</h2>
-                    <p>{{products.total_inventory}}</p>
-                </div>
-
-                <div class="widget">
-                    <i class="fas fa-chart-line fa-2x"></i>
-                    <h2>Total Users</h2>
-                    <p>{{customers.total_users}}</p>
-                </div>
-
-                <div class="widget">
-                    <i class="fas fa-dollar-sign fa-2x"></i>
-                    <h2>Revenue</h2>
-                    <p>${{total_revenue.total_price}}</p>
-                </div>
-
-                <div class="widget">
-                    <i class="fas fa-users fa-2x"></i>
-                    <h2>Employees</h2>
-                    <p>{{salespersons.name}}</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h5>&nbsp;&nbsp;Below graph shows the average ratings of our top products and its  &nbsp;&nbsp;contribution to
-                      customer satisfaction and influence on purchase decisions</h5>
-                <canvas id="topProductsChart" width="400" height="200"></canvas>
-            </div>
-            <div class="card">
-                <h5>&nbsp;&nbsp;Total Sales Volume by Region</h 5>
-                    <canvas id="lineChart" width="400" height="200"></canvas>
-            </div>
-        </div>
-    </section>
-
-
-
-    <script>
-        // Area Graph with Two Fields
-        var topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
-        var topProductsChart = new Chart(topProductsCtx, {
-            type: 'bar',
-            data: {
-                labels: [
-                    {% for product in top_products %}
-                        '{{ product.BagType }}',
-                    {% endfor %}
-                ],
-        datasets: [{
-            label: 'Average Rating',
-            data: [
-                {% for product in top_products %}
-                            {{ product.AverageRating }},
+<div class="sidebar">
+    <a href="/dashboard">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+    <a href="/order_items">
+        <i class="fas fa-file"></i> Orders
+    </a>
+    <a href="/products">
+        <i class="fas fa-shopping-cart"></i> Products
+    </a>
+    <a href="/customers">
+        <i class="fas fa-users"></i> Customers
+    </a>
+    <a href="/warehouses">
+        <i class="fa fa-truck"></i> Warehouse
+    </a>
+</div>
+<div class="content">
+    <table>
+        <thead>
+        <tr style="background-color: rgba(116,8,168,0.98); color:white; font-weight: bold; font-size: 18px;">
+            <td colspan="4">Order Details</td>
+        </tr>
+            <th>Product</th>
+            <th>Order ID</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order_item in order_items %}
+        <tr>
+            <td>{{ order_item.product.name }}</td>
+            <td>{{ order_item.order.id }}</td>
+            <td>{{ order_item.quantity }}</td>
+            <td>
+                <a href="{% url 'order_item_update' pk=order_item.pk %}" class="icon" style="color:purple"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'order_item_delete' order_item_id=order_item.id %}" class="icon" style="color:purple"><i class="fas fa-trash-alt"></i></a>
+            </td>
+        </tr>
         {% endfor %}
-        ],
-            backgroundColor: 'rgba(220,253,7,0.96)',
-                }]
-            },
-        options: {
-            scales: {
-                x: {
-                    type: 'category',
-                        labels: [
-                            {% for product in top_products %}
-                '{{ product.BagType }}',
-                    {% endfor %}
-                        ]
-        },
-        y: { beginAtZero: true }
-                }
-            }
-        });
-
-        // Line Chart for Total Sales
-        var salesChartCtx = document.getElementById('lineChart').getContext('2d');
-        var salesChart = new Chart(salesChartCtx, {
-            type: 'line',
-            data: {
-                labels: [
-                    {% for entry in totalSales %}
-                        '{{ entry.Region_name }}',
-                    {% endfor %}
-                ],
-        datasets: [{
-            label: 'Total Sales',
-            data: [
-                {% for entry in totalSales %}
-                            {{ entry.TotalSales }},
-        {% endfor %}
-        ],
-            backgroundColor: 'rgba(241,13,109,0.61)',
-                borderColor: 'rgba(153,75,192,0.2)',
-                    borderWidth: 1,
-                        fill: true,
-                }]
-            },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-        });
-    </script>
-
+        </tbody>
+    </table>
+</div>
 </body>
-
 </html>

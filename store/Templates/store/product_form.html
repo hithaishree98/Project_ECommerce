@@ -1,0 +1,77 @@
+<!-- store/templates/store/product_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if action == 'Update' %}Update{% else %}Create{% endif %} Product</title>
+    <link rel="stylesheet" href="path/to/your/custom.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: lavender; /* Set your background color */
+        }
+
+        .card {
+            width: 40%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff; /* Set your card background color */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+            max-height: 400px; /* Set maximum height */
+            overflow-y: auto; /* Enable vertical scrollbar if needed */
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #7e57c2; /* Set your heading color */
+        }
+
+        label, input {
+            display: block;
+            margin-bottom: 10px;
+            color: #333; /* Set label and input text color */
+        }
+
+        button {
+            padding: 10px;
+            background-color: #7e57c2; /* Set your button background color */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #5e35b1; /* Set your button hover color */
+        }
+
+        a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #333; /* Set your link text color */
+            text-align: center; /* Center the link text */
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>{% if action == 'Update' %}Update{% else %}Create{% endif %} Product</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if action == 'Update' %}Update{% else %}Create{% endif %}</button>
+        </form>
+        <a href="{% url 'product_list' %}" style="color: #7e57c2;">Back to List</a>
+    </div>
+</body>
+</html>

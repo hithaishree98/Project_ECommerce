@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Customer</title>
+    <style>
+        body {
+            background-color: lavender; /* Deep Purple background */
+            color: #fff; /* White text color */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .card {
+            background-color: white; /* Dark Purple card background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: mediumpurple; /* White heading color */
+        }
+
+        p {
+            color: black; /* Light Gray text color */
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #7e57c2; /* Purple button background */
+            color: #fff; /* White text color */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #5e35b1; /* Darker Purple on hover */
+        }
+
+        a {
+            color: #7e57c2; /* Purple link color */
+            text-decoration: none;
+            margin-top: 10px;
+            display: block;
+        }
+
+        a:hover {
+            color: #5e35b1; /* Darker Purple on hover */
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>Delete Customer</h2>
+
+    {% if deletion_failed %}
+    <p style="color: red;">Cannot delete customer "{{ customer.name }}" because they have placed an order.</p>
+    {% else %}
+    <p>Are you sure you want to delete customer "{{ customer.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, delete</button>
+    </form>
+    {% endif %}
+
+    <a href="{% url 'customer_list' %}">Cancel</a>
+</div>
+
+</body>
+</html>

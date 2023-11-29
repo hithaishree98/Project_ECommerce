@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Warehouse List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            /* Added to make sure the content flows correctly */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid lavender;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: lavender;
+        }
+
+        tbody tr:hover {
+            background-color: lavender;
+        }
+
+        h1 {
+            font-family: 'Copperplate Gothic Light', sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h1 span {
+            color: rgba(116, 8, 168, 0.98);
+            transition: color 0.3s ease-in-out;
+        }
+
+        header {
+            background-color: lavender;
+            border-color: black;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            /* Set width to 100% */
+            z-index: 1000;
+            /* Set z-index to make sure it's above other elements */
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: lavender;
+            padding-top: 80px;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            /* Adjusted top to make space for the fixed header */
+            overflow-x: hidden;
+        }
+
+        .sidebar a {
+            padding: 16px 16px 16px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: rgba(116, 8, 168, 0.98);
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #c5c5f3;
+        }
+
+        .content {
+            padding: 100px;
+            margin-left: 180px;
+            /* Adjusted left margin to accommodate the sidebar width */
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 60px;
+        }
+
+        .card {
+            width: 48%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: ghostwhite;
+            font-family: "Calibri Light";
+        }
+
+        .widgets {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .widget {
+            width: 220px;
+            height: 180px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 20px;
+            text-align: center;
+            margin: 10px;
+            color: rgba(16, 44, 224, 0.61);
+            border: 2px solid rgba(5, 11, 54, 0.61);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 50px;
+            /* Adjusted top to make space for the fixed header */
+            left: 20px;
+            transform: translateY(-50%);
+            padding: 10px;
+            background-color: lavender;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-btn i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <h1><span>Emporium Analytics</span></h1>
+    <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+    <a href="/admin" data-after="Admin" style="color:mediumpurple">Admin</a>
+</header>
+
+<div class="sidebar">
+    <a href="/dashboard">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+    <a href="/order_items">
+        <i class="fas fa-file"></i> Orders
+    </a>
+    <a href="/products">
+        <i class="fas fa-shopping-cart"></i> Products
+    </a>
+    <a href="/customers">
+        <i class="fas fa-users"></i> Customers
+    </a>
+    <a href="/warehouses">
+        <i class="fa fa-truck"></i> Warehouse
+    </a>
+</div>
+<div class="content">
+    <table>
+        <thead>
+            <tr style="background-color: rgba(116,8,168,0.98); color:white; font-weight: bold; font-size: 18px;">
+                <td colspan="5">Warehouse Details</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <th>Manager</th>
+                <th>Salesperson Count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for warehouse in warehouses %}
+            <tr>
+                <td>{{ warehouse.address }}</td>
+                <td>{{ warehouse.store_manager}}</td>
+                <td>{{ warehouse.salespersons }}</td>
+                <td>
+                    <a href="{% url 'warehouse_detail' warehouse_id=warehouse.id %}" class="icon" style="color:purple"><i class="fas fa-eye"></i></a>&nbsp;&nbsp;
+                    <a href="{% url 'warehouse_update' warehouse_id=warehouse.id %}" class="icon" style="color:purple"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;
+                    <a href="{% url 'warehouse_delete' warehouse_id=warehouse.id %}" class="icon" style="color:purple"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="padding-top: 10px">
+        <a href="{% url 'warehouse_create' %}" class="icon" style="color:purple"><i class="fas fa-plus"></i> Create Warehouse</a>
+    </div>
+</div>
+</body>
+</html>

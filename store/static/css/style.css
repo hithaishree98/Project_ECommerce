@@ -103,7 +103,7 @@ body{
     text-align: center;
     flex-direction: column;
     padding: 14px;
-    background-color: black!important;
+    background-color:grey!important;
 }
 #page-header h2
 {
