@@ -25,6 +25,7 @@ class Product(models.Model):
     BagType = models.CharField(max_length=200, null=True)
     AverageRating = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     InventoryQuantity = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    store_id = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self):
         return self.name

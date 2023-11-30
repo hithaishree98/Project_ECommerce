@@ -40,22 +40,22 @@
     <script type="text/javascript">
         var user = '{{request.user}}'
 
-		function getToken(name) {
-		    var cookieValue = null;
-		    if (document.cookie && document.cookie !== '') {
-		        var cookies = document.cookie.split(';');
-		        for (var i = 0; i < cookies.length; i++) {
-		            var cookie = cookies[i].trim();
-		            // Does this cookie string begin with the name we want?
-		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-		                break;
-		            }
-		        }
-		    }
-		    return cookieValue;
-		}
-		var csrftoken = getToken('csrftoken')
+       function getToken(name) {
+           var cookieValue = null;
+           if (document.cookie && document.cookie !== '') {
+               var cookies = document.cookie.split(';');
+               for (var i = 0; i < cookies.length; i++) {
+                   var cookie = cookies[i].trim();
+                   // Does this cookie string begin with the name we want?
+                   if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                       cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                       break;
+                   }
+               }
+           }
+           return cookieValue;
+       }
+       var csrftoken = getToken('csrftoken')
     </script>
 </head>
 <body>
@@ -116,7 +116,109 @@
         <p>The Top class products available here!</p>
     </section>
     <section id="product1" class="section-p1">
-        <div class="pro-container">
+
+        <form id="sortForm">
+            <label for="sort">Sort by Price:</label>
+            <select id="sort" name="sort">
+                <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
+                <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
+            </select>
+            <button type="button" onclick="sortProducts()">Apply</button>
+        </form>
+
+    <script type="text/javascript">
+    var user = '{{ request.user }}';
+    var sortOrder = 'asc';  // Default sorting order
+
+    function getToken(name) {
+        // ... (your existing getToken function) ...
+    }
+
+    var csrftoken = getToken('csrftoken');
+
+    function sortProducts() {
+        // Toggle sorting order
+        sortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+
+        // Reload the page with the new sorting order
+        fetchProducts();
+    }
+
+    function fetchProducts() {
+        // Send a request to the server to get the updated product list
+        var url = window.location.pathname + '?sort=' + sortOrder;
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                // Replace the current product list with the updated one
+                var parser = new DOMParser();
+                var newDoc = parser.parseFromString(data, 'text/html');
+                var newProducts = newDoc.getElementById('product1');
+                var currentProducts = document.getElementById('product1');
+                if (newProducts) {
+                currentProducts.innerHTML = newProducts.innerHTML;
+
+                // Attach event listeners after updating the product content
+                attachAddToCartListeners();
+            } else {
+                console.error('Error: Could not find the product container in the fetched HTML.');
+            }
+        })
+            .catch(error => console.error('Error fetching products:', error));
+    }
+
+    // Set the initial selected option based on the URL parameter
+    var urlParams = new URLSearchParams(window.location.search);
+    var sortParam = urlParams.get('sort');
+    if (sortParam === 'desc') {
+        document.getElementById('sort').value = 'desc';
+    }
+
+    // Initial fetch to populate the product list
+    window.onload = function() {
+        fetchProducts();
+    };
+
+    // Event listener for the "Add to Cart" functionality
+    function attachAddToCartListeners() {
+    var addToCartButtons = document.querySelectorAll('.update-cart');
+
+    addToCartButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var productId = this.dataset.product;
+            var action = this.dataset.action;
+
+            // Simplified fetch for debugging
+            fetch('/update_item/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({ productId: productId, action: action }),
+            })
+            .then(response => {
+                // Log the full response for debugging
+                console.log('Full Response:', response);
+                return response.json();
+            })
+            .then(data => {
+                // Update the cart content on the page
+                // ...
+            })
+            .catch(error => {
+                // Log the full error for debugging
+                console.error('Error updating cart:', error);
+            });
+        });
+    });
+}
+
+</script>
+
+
+    </script>
+        <div class="pro-container" id="product1">
             {% for product in products %}
             <div class="pro">
                 <section id="p1">
@@ -132,6 +234,8 @@
                         <i class="fas fa-star-half"></i>
                     </div>
                     <h4>Rs.{{product.price|floatformat:2}}</h4>
+                    <h4>Store:{{product.store_id}}</h4>
+                    <h4>Quantity Available:{{product.InventoryQuantity}}</h4>
                 </div>
                 </section>
                <!-- products.html -->
@@ -146,8 +250,8 @@
                 {% endif %}
             </div>
             {% endfor %}
+
         </div>
-    </section>
     <section id="pagination" class="section-p1">
         <a href="#">1</a>
         <a href="#">2</a>
@@ -155,5 +259,6 @@
     </section>
    <!-- <script src="script.js"></script> -->
     <script type="text/javascript" src="{%static 'js/Cart.js'%}"></script>
+
 </body>
 </html>

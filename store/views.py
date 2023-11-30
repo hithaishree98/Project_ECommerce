@@ -32,10 +32,21 @@ def product(request):
         items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
         cartItems = order['get_cart_items']
-    products = Product.objects.all()
-    context = {'products': products, 'cartItems': cartItems}
-    return render(request, 'store/Products.html', context)
 
+    # Get the sorting parameter from the request
+    sort_order = request.GET.get('sort', 'asc')  # Default to ascending order if not provided
+
+    # Fetch products based on the sorting order
+    if sort_order == 'asc':
+        products = Product.objects.all().order_by('price')
+    elif sort_order == 'desc':
+        products = Product.objects.all().order_by('-price')
+    else:
+        # Handle invalid sorting parameter (optional)
+        products = Product.objects.all()
+
+    context = {'products': products, 'cartItems': cartItems, 'sort_order': sort_order}
+    return render(request, 'store/Products.html', context)
 
 def cart(request):
     if request.user.is_authenticated:
