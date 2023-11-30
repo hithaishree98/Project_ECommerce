@@ -57,6 +57,7 @@
        }
        var csrftoken = getToken('csrftoken')
     </script>
+    <script type="text/javascript" src="{%static 'js/Cart.js'%}"></script>
 </head>
 <body>
     <section id="header">
@@ -70,6 +71,7 @@
                 <li><a href="/">Home</a></li>
                 <li><a class="active" href="/product">Shop</a></li>
                 <li><a href="/contact">Contact</a></li>
+                <li><a href="{% url 'review_items' %}">Past Orders</a></li>
                 <li><a href="/admin">Admin</a></li>
                 <li><a href="#">Categories</a>
                     <div class="mega-box">
@@ -116,8 +118,7 @@
         <p>The Top class products available here!</p>
     </section>
     <section id="product1" class="section-p1">
-
-        <form id="sortForm">
+         <form id="sortForm">
             <label for="sort">Sort by Price:</label>
             <select id="sort" name="sort">
                 <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
@@ -126,13 +127,55 @@
             <button type="button" onclick="sortProducts()">Apply</button>
         </form>
 
-    <script type="text/javascript">
+        <div class="pro-container" id="product1">
+            {% for product in products %}
+            <div class="pro">
+                <section id="p1">
+                <img src="{{product.imageURL}}" alt="">
+                <div class="des">
+                    <span></span>
+                    <h5>{{product.name}}</h5>
+                    <div class="star">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half"></i>
+                    </div>
+                    <h4>Rs.{{product.price|floatformat:2}}</h4>
+                    <h4>Store:{{product.store_id}}</h4>
+                    <h4>Quantity Available:{{product.InventoryQuantity}}</h4>
+                </div>
+                </section>
+               <!-- products.html -->
+                {% if product.InventoryQuantity|floatformat:2 == "0.00" %}
+                    <div class="carthere">
+                        <p style="color:red">PRODUCT OUT OF STOCK</p>
+                    </div>
+                {% else %}
+                    <a data-product="{{ product.id }}" data-action="add" class="update-cart" href="/cart">
+                        <img src="https://img.icons8.com/material-rounded/96/000000/shopping-bag.png" width="30" height="40"/>
+                    </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+        </div>
+    </section>
+    <section id="pagination" class="section-p1">
+        <a href="#">1</a>
+        <a href="#">2</a>
+        <a href="#"><img src="https://img.icons8.com/external-neu-royyan-wijaya/64/000000/external-dots-neu-interface-neu-royyan-wijaya.png"width="30" height="30"/></a>
+    </section>
+</body>
+   <script type="text/javascript">
     var user = '{{ request.user }}';
     var sortOrder = 'asc';  // Default sorting order
 
     function getToken(name) {
         // ... (your existing getToken function) ...
     }
+
 
     var csrftoken = getToken('csrftoken');
 
@@ -145,27 +188,38 @@
     }
 
     function fetchProducts() {
-        // Send a request to the server to get the updated product list
-        var url = window.location.pathname + '?sort=' + sortOrder;
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                // Replace the current product list with the updated one
-                var parser = new DOMParser();
-                var newDoc = parser.parseFromString(data, 'text/html');
-                var newProducts = newDoc.getElementById('product1');
-                var currentProducts = document.getElementById('product1');
-                if (newProducts) {
-                currentProducts.innerHTML = newProducts.innerHTML;
+        // Get the current search parameters from the URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var sortParam = urlParams.get('sort');
+        var searchParam = urlParams.get('name');
 
-                // Attach event listeners after updating the product content
-                attachAddToCartListeners();
-            } else {
-                console.error('Error: Could not find the product container in the fetched HTML.');
-            }
-        })
-            .catch(error => console.error('Error fetching products:', error));
+        // Build the URL with both sorting and search parameters
+        var url = window.location.pathname + '?sort=' + sortOrder;
+        if (searchParam) {
+            url += '&name=' + searchParam;
+        }
+
+        // Fetch the updated product list
+        fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    // Replace the current product list with the updated one
+                    var parser = new DOMParser();
+                    var newDoc = parser.parseFromString(data, 'text/html');
+                    var newProducts = newDoc.getElementById('product1');
+                    var currentProducts = document.getElementById('product1');
+                    if (newProducts) {
+                        currentProducts.innerHTML = newProducts.innerHTML;
+
+                        // Attach event listeners after updating the product content
+                        attachAddToCartListeners();
+                    } else {
+                        console.error('Error: Could not find the product container in the fetched HTML.');
+                    }
+                })
+                .catch(error => console.error('Error fetching products:', error));
     }
+
 
     // Set the initial selected option based on the URL parameter
     var urlParams = new URLSearchParams(window.location.search);
@@ -215,50 +269,4 @@
 }
 
 </script>
-
-
-    </script>
-        <div class="pro-container" id="product1">
-            {% for product in products %}
-            <div class="pro">
-                <section id="p1">
-                <img src="{{product.imageURL}}" alt="">
-                <div class="des">
-                    <span></span>
-                    <h5>{{product.name}}</h5>
-                    <div class="star">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half"></i>
-                    </div>
-                    <h4>Rs.{{product.price|floatformat:2}}</h4>
-                    <h4>Store:{{product.store_id}}</h4>
-                    <h4>Quantity Available:{{product.InventoryQuantity}}</h4>
-                </div>
-                </section>
-               <!-- products.html -->
-                {% if product.InventoryQuantity|floatformat:2 == "0.00" %}
-                    <div class="carthere">
-                        <p style="color:red">PRODUCT OUT OF STOCK</p>
-                    </div>
-                {% else %}
-                    <a data-product="{{ product.id }}" data-action="add" class="update-cart" href="#">
-                        <img src="https://img.icons8.com/material-rounded/96/000000/shopping-bag.png" width="30" height="40"/>
-                    </a>
-                {% endif %}
-            </div>
-            {% endfor %}
-
-        </div>
-    <section id="pagination" class="section-p1">
-        <a href="#">1</a>
-        <a href="#">2</a>
-        <a href="#"><img src="https://img.icons8.com/external-neu-royyan-wijaya/64/000000/external-dots-neu-interface-neu-royyan-wijaya.png"width="30" height="30"/></a>
-    </section>
-   <!-- <script src="script.js"></script> -->
-    <script type="text/javascript" src="{%static 'js/Cart.js'%}"></script>
-
-</body>
 </html>

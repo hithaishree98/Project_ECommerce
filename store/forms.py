@@ -4,6 +4,12 @@ from .models import Customer
 from .models import Product
 from .models import StoreWarehouse
 from .models import ShippingAddress
+from .models import ShippingAddress
+
+class ShippingAddressForm(forms.ModelForm):
+    class Meta:
+        model = ShippingAddress
+        fields = ['address', 'city', 'state', 'zipcode']
 class OrderItemForm(forms.ModelForm):
     class Meta:
         model = OrderItem
@@ -17,7 +23,8 @@ class CustomerForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'price', 'BrandName', 'BagType', 'AverageRating', 'InventoryQuantity']
+        fields = ['name', 'price', 'BrandName', 'BagType', 'AverageRating', 'InventoryQuantity', 'store_id']
+
 
 class StoreWarehouseForm(forms.ModelForm):
     class Meta:

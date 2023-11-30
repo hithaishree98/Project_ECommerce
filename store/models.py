@@ -138,7 +138,7 @@ from django.db import models
 class StoreSalesperson(models.Model):
     salesperson_ID = models.AutoField(primary_key=True)
     salesperson_name = models.CharField(max_length=200, null=True)
-    address = models.CharField(max_length=200, null=True)
+    address = models.CharField(max_length=1000, null=True)
     email = models.CharField(max_length=200, null=True)
     job_title = models.TextField()
     salary = models.IntegerField()

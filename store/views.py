@@ -18,7 +18,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.validators import validate_email
 from .forms import ShippingAddressForm
 
@@ -480,7 +480,6 @@ def warehouse_create(request):
 
     return render(request, 'store/warehouse_form.html', {'form': form})
 
-
 def warehouse_update(request, warehouse_id):
     warehouse = get_object_or_404(StoreWarehouse, id=warehouse_id)
 
@@ -625,14 +624,54 @@ def EmployeeLoginPage(request):
 
     return render(request, 'store/EmployeeLogin.html', context)
 
+
 def enter_shipping_details(request):
     if request.method == 'POST':
         form = ShippingAddressForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('success')  # Redirect to a success page
+            shipping_address = form.save(commit=False)
+
+            # Retrieve the customer associated with the logged-in user
+            customer = Customer.objects.get(user=request.user)
+            shipping_address.customer = customer
+
+            # Retrieve the order based on your application logic
+            # For example, you might get the last cart order associated with the customer
+            order = Order.objects.filter(customer=customer, complete='True').last()
+
+            # If you have an order, associate it with the shipping address
+            if order:
+                shipping_address.order = order
+                shipping_address.save()
+
+                # Optionally, you might want to update the order status to 'placed' or similar
+                order.status = 'placed'
+                order.save()
+
+                return redirect('cart')  # Redirect to a success page
+            else:
+                print("No cart order found for the customer.")
+                # Handle the case where no cart order is found
+        else:
+            print(form.errors)
+            # Handle form validation errors here
     else:
         form = ShippingAddressForm()
 
-    return render(request, 'enter_shipping_details.html', {'form': form})
+    return render(request, 'store/enter_shipping_details.html', {'form': form})
+
+def review_items(request):
+    try:
+        past_orders = Order.objects.filter(customer=request.user)
+    except ObjectDoesNotExist:
+        past_orders = []
+    except Exception as e:
+        # Handle other specific exceptions if needed
+        past_orders = []
+        # Log the exception or perform other error handling actions
+
+    context = {
+        'past_orders': past_orders,
+    }
+    return render(request, 'store/review_items.html', context)
 

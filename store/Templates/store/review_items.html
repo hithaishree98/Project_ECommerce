@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Past Orders</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        li:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        li::before {
+            content: "📦"; /* Add a small package emoji before each order */
+            margin-right: 10px;
+        }
+
+        li:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.02);
+            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        /* Button style */
+        .review-btn {
+            display: block;
+            margin: 20px auto; /* Adjusted margin */
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #shipping {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 400px;
+            padding: 20px;
+        }
+
+        #shipping-info {
+            text-align: center;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-field {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3b8f3e;
+        }
+
+        a {
+            display: block;
+            margin-top: 15px;
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<section id="shipping" class="section-p1">
+    <div class="card">
+        <div id="shipping-info">
+            <hr>
+            <h2 style="color:#4CAF50">Your Past Orders</h2>
+            <hr>
+            <!-- Form for entering shipping details -->
+            <ul>
+                {% for order in past_orders %}
+                <li>Order ID: {{ order.id }}, Total Amount: {{ order.total_amount }}</li>
+                {% empty %}
+                <li>No past orders found.</li>
+                {% endfor %}
+            </ul>
+
+            <!-- Back to Cart link -->
+            <a href="{% url 'Shop' %}">Continue Shopping</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>
