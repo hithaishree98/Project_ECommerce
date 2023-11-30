@@ -25,6 +25,7 @@ urlpatterns = [
     path('sp12/', views.sp12, name="product13"),
     path('sp13/', views.sp13, name="product14"),
     path('sp14/', views.sp14, name="product15"),
+    path('enter-shipping-details/', views.enter_shipping_details, name='enter_shipping_details'),
     path('update_item/', views.updateItem, name="update_item"),
     path('order_items/', views.order_item_list, name='order_item_list'),
     path('order_items/<int:pk>/', views.order_item_detail, name='order_item_detail'),
