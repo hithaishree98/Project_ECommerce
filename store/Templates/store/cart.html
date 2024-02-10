@@ -96,18 +96,23 @@
             <tbody>
                 {%for item in items %}
                 <tr>
-                    <td><a data-product={{item.product.id}} data-action="remove" class="update-cart" href="#"><img src="https://img.icons8.com/ios-glyphs/90/000000/delete-forever.png" width="20" height="25"/> </a> </td>
+                  <td>
+    <a data-product="{{item.product.id}}" data-action="remove" class="update-cart" href="#">
+        <i data-product="{{item.product.id}}" data-action="remove" class="update-cart fas fa-trash-alt"></i>
+    </a>
+</td>
                     <td><img src="{{item.product.imageURL}}"></td>
                     <td>{{item.product.name}}</td>
                     <td>Rs.{{item.product.price|floatformat:2}}/piece</td>
                     <td class="quantity">
                         <p class="quantity">{{item.quantity}}</p>
-                        <div class="quantity">
-                            <img data-product={{item.product.id}} data-action="add" class="update-cart chg-quantity" src="{% static './images/3+arrow-up.png'%}">
-                            <img data-product={{item.product.id}} data-action="remove" class="update-cart chg-quantity" src="{% static './images/2+arrow-down.png'%}">
-                            
-                          <!--<td><input type="number" data-product={{item.product.id}} data-action="add" class="updat-cart" value="{{item.quantity}}"></td>-->
+                        <div class="quantity" style="padding-top: 25px">
+                            <i data-product="{{item.product.id}}" data-action="add"
+                               class="update-cart chg-quantity fas fa-arrow-up"></i>
+                            <i data-product="{{item.product.id}}" data-action="remove"
+                               class="update-cart chg-quantity fas fa-arrow-down"></i>
                         </div>
+
                     <td>Rs.{{item.get_total|floatformat:2}}</td>
                 </tr>
                 {% endfor %}

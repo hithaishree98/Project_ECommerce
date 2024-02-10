@@ -57,7 +57,7 @@
         }
 
         form {
-            height: 700px;
+            height: 750px;
             width: 400px;
             background-color: rgba(255, 255, 255, 0.13);
             position: absolute;
@@ -107,7 +107,7 @@
         }
 
         ::placeholder {
-            color: balck;
+            color: black;
         }
 
         button {
@@ -156,9 +156,16 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
+
 <form action="" method="post">
     {% csrf_token %}
     <h3>Signup Here</h3>
+
+{% if error %}
+    <div class="error-message" style="padding-top: 5px" >
+        <p style="color:red">{{ error }}</p>
+    </div>
+{% endif %}
 
     <label for="username">Username</label>
     <input type="text" placeholder="Username" name="username" id="username">

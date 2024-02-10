@@ -510,7 +510,8 @@ def warehouse_delete(request, warehouse_id):
 
 
 def SignupPage(request):
-    context = {}
+    context = {'error': None}
+
     if request.method == 'POST':
         uname = request.POST.get('username')
         email = request.POST.get('email')
@@ -521,34 +522,29 @@ def SignupPage(request):
         try:
             validate_email(email)
         except ValidationError as e:
-            return JsonResponse({'error': str(e)}, status=400)
+            context['error'] = str(e)
 
         # Validate password complexity
         try:
             validate_password(pass1)
         except ValidationError as e:
-            return JsonResponse({'error': str(e)}, status=400)
+            context['error'] = str(e)
 
         if pass1 != pass2:
-            return JsonResponse({'error': "Your password and confirm password are not the same!"}, status=400)
+            context['error'] = "Your password and confirm password are not the same!"
         else:
             try:
                 if User.objects.filter(username=uname).exists():
-                    return JsonResponse({'error': "Username already exists. Please choose a different username."},
-                                        status=400)
-
-                # Attempt to create a user
-                my_user = User.objects.create_user(uname, email, pass1)
-                my_user.save()
-                return redirect('login')
-
+                    context['error'] = "Username already exists. Please choose a different username."
+                else:
+                    # Attempt to create a user
+                    my_user = User.objects.create_user(uname, email, pass1)
+                    my_user.save()
+                    return redirect('login')
             except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)  # Handle other exceptions
-    else:
-        # Handle GET requests or render signup form
-        # ...
+                context['error'] = str(e)
 
-        return render(request, 'store/signup.html', context)
+    return render(request, 'store/signup.html', context)
 
 
 def LoginPage(request):
